@@ -4,4 +4,14 @@
 개발환경
 - IntelliJ 2021.3.3
 - JAVA 11
-- SpringBoot
+- SpringBoot 2.7.0
+- Gradle
+- MySQL
+
+라이브러리
+- Spring Data JPA
+- Spring Boot DevTools
+- Lombok
+- Spring Web
+- Thymeleaf
+- MySQL Driver
