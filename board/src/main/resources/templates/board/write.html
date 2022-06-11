@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
 <head>
     <meta charset="UTF-8">
     <title>YB Board</title>
 </head>
-<body>
+<div layout:fragment="content">
     <form action="/post" method="post">
         제목 : <input type="text" name="title"> <br>
         작성자 : <input type="text" name="writer"><br>
@@ -13,5 +15,5 @@
         <input type="submit" value="등록">
 
     </form>
-</body>
+</div>
 </html>

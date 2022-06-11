@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
 <head>
     <meta charset="UTF-8">
     <title>YB Board</title>
 </head>
-<body>
+<div layout:fragment="content">
 <form th:action="@{'/post/edit/' + ${boardDto.id}}" method="post">
     <input type="hidden" name="_method" value="put"/>
     <input type="hidden" name="id" th:value="${boardDto.id}"/>
@@ -15,5 +18,5 @@
 
     <input type="submit" value="수정">
 </form>
-</body>
+</div>
 </html>
