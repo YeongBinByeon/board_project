@@ -1,7 +1,9 @@
 package com.yb.board.controller;
 
 import com.yb.board.dto.BoardDto;
+import com.yb.board.dto.CommentDto;
 import com.yb.board.service.BoardService;
+import com.yb.board.service.CommentService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BoardController {
     private BoardService boardService;
+    private CommentService commentService;
 
     @GetMapping(value = "/")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "1") Integer pageNum){
@@ -40,7 +43,9 @@ public class BoardController {
     @GetMapping(value = "/post/{postId}")
     public String detail(@PathVariable("postId") long postId, Model model){
         BoardDto boardDto = boardService.getPost(postId);
+        List<CommentDto> commentDtoList = commentService.findComments(postId);
         model.addAttribute("boardDto", boardDto);
+        model.addAttribute("commentDtoList", commentDtoList);
         return "board/detail.html";
     }
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
       layout:decorate="~{layouts/layout1}">
 <head>
     <meta charset="UTF-8">
@@ -9,29 +9,81 @@
 
 </head>
 <div layout:fragment="content" class="container border">
-    <div class="row">
-        <div class="col-4">글 제목</div>
-        <div class="col-8"><p th:text="${boardDto.title}"></p></div>
-    </div>
-    <div class="row">
-        <div class="col-4">작성일</div>
-        <div class="col-8"><p>[[${#temporals.format(boardDto.createdDate, 'yyyy-MM-dd HH:mm')}]]</p></div>
-    </div>
-    <div class="row">
-        <div class="col-4">본문 내용</div>
-        <div class="col-8"> <p th:text="${boardDto.content}"></p></div>
+    <div>
+        <div class="row">
+            <div class="col-4">글 제목</div>
+            <div class="col-8"><p th:text="${boardDto.title}"></p></div>
+        </div>
+        <div class="row">
+            <div class="col-4">작성일</div>
+            <div class="col-8"><p>[[${#temporals.format(boardDto.createdDate, 'yyyy-MM-dd HH:mm')}]]</p></div>
+        </div>
+        <div class="row">
+            <div class="col-4">본문 내용</div>
+            <div class="col-8"> <p th:text="${boardDto.content}"></p></div>
+        </div>
     </div>
 
     <!-- 수정/삭제 -->
-    <div>
-        <a th:href="@{'/post/edit/'+${boardDto.id}}">
-            <button class="btn btn-primary">수정</button>
-        </a>
-        <form id="delete-form" th:action="@{'/post/'+${boardDto.id}}" method="post">
-            <input type="hidden" name="_method" value="delete"/>
-            <button id="delete-btn" class="btn btn-primary">삭제</button>
-        </form>
+    <div class="row g-2">
+        <div class="col-auto">
+            <a th:href="@{'/post/edit/'+${boardDto.id}}">
+                <button class="btn btn-primary">수정</button>
+            </a>
+        </div>
+        <div class="col-auto">
+            <form id="delete-form" th:action="@{'/post/'+${boardDto.id}}" method="post">
+                <input type="hidden" name="_method" value="delete"/>
+                <button id="delete-btn" class="btn btn-primary">삭제</button>
+            </form>
+        </div>
     </div>
+
+    </br>
+    </br>
+
+<!--    <form action="/post" method="post">-->
+    <form th:action="@{'/comment'}" method="post">
+        <div>
+            <input th:name="boardId" th:value="${boardDto.id}" name="boardId" type="hidden">
+            <div class="input-group mb-3">
+                <input type="text" name="nickname" class="form-control" placeholder="닉네임" aria-label="Username" aria-describedby="basic-addon1">
+                </br>
+                <input type="text" name="password" class="form-control" placeholder="비밀번호" aria-label="password" aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group">
+                <span class="input-group-text">댓글 입력</span>
+                <textarea class="form-control" name="comment" placeholder="코멘트 입력" aria-label="With textarea"></textarea>
+            </div>
+        </div>
+        <br/>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <br/>
+    <br/>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>닉네임</th>
+            <th>코멘트</th>
+        </tr>
+        </thead>
+        <tbody>
+
+            <tr th:each="commentDto : ${commentDtoList}">
+                <td>
+                    <div th:text="${commentDto.nickname}"></div>
+                </td>
+                <td>
+                    <div th:text="${commentDto.comment}"></div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+
     <!-- 변수 셋팅 -->
     <script th:inline="javascript">
         /*<![CDATA[*/
