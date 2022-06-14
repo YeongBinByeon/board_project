@@ -4,59 +4,74 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}">
 
-<head>
-    <meta charset="UTF-8">
-    <title>YB Board</title>
-    <link rel="stylesheet" th:href="@{/css/board.css}">
-</head>
-<div layout:fragment="content" class="container">
+    <head>
+        <meta charset="UTF-8">
+        <title>YB Board</title>
+        <link rel="stylesheet" th:href="@{/css/board.css}">
+    </head>
+    <div layout:fragment="content" class="container">
 
-    <a th:href="@{/post}" class="btn btn-primary">글쓰기</a>
-    <table class="table table-striped table-hover ">
-        <thead>
-        <tr>
-            <th class="one wide">번호</th>
-            <th class="ten wide">글제목</th>
-            <th class="two wide">작성자</th>
-            <th class="three wide">작성일</th>
-        </tr>
-        </thead>
+        <a th:href="@{/post}" class="btn btn-primary">글쓰기</a>
+        <table class="table table-striped table-hover ">
+            <thead>
+            <tr>
+                <th class="one wide">번호</th>
+                <th class="ten wide">글제목</th>
+                <th class="two wide">작성자</th>
+                <th class="three wide">작성일</th>
+            </tr>
+            </thead>
 
-        <tbody>
-        <!-- CONTENTS -->
-        <tr th:each="board : ${boardList}">
-            <td>
-                <span th:text="${board.id}"></span>
-            </td>
-            <td>
-                <a th:href="@{'/post/'+${board.id}}">
-                    <span th:text="${board.title}"></span>
-                </a>
-            </td>
-            <td>
-                <span th:text="${board.writer}"></span>
-            </td>
-            <td>
-                <span th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+            <tbody>
+            <!-- CONTENTS -->
+            <tr th:each="board : ${boardList}">
+                <td>
+                    <span th:text="${board.id}"></span>
+                </td>
+                <td>
+                    <a th:href="@{'/post/view/'+${board.id}}">
+                        <span th:text="${board.title}"></span>
+                    </a>
+                </td>
+                <td>
+                    <span th:text="${board.writer}"></span>
+                </td>
+                <td>
+                    <span th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
-    <!-- 검색 form -->
-    <form action="/board/search" method="GET">
+        <!-- 검색 form -->
+        <form action="/board/search" method="GET">
+            <div>
+                <input name="keyword" type="text" class="form-control mr-sm-2" placeholder="검색어를 입력해주세요">
+            </div>
+            <button class="btn btn-primary">검색하기</button>
+        </form>
+
         <div>
-            <input name="keyword" type="text" class="form-control mr-sm-2" placeholder="검색어를 입력해주세요">
+        <span th:each="pageNum : ${pageList}" th:inline="text">
+            <a th:href="@{'/?page=' + ${pageNum}}" >[[${pageNum}]]</a>
+        </span>
         </div>
-        <button class="btn btn-primary">검색하기</button>
-    </form>
-
-    <div>
-    <span th:each="pageNum : ${pageList}" th:inline="text">
-        <a th:href="@{'/?page=' + ${pageNum}}" >[[${pageNum}]]</a>
-    </span>
     </div>
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            var message = [[${message}]];
+            if(message != null){
+                console.log(message);
+                alert(message);
+
+                //location.replace([[${searchUrl}]]);
+            }
+            /*]]>*/
+
+        </script>
+    </th:block>
 
 
-</div>
 </html>

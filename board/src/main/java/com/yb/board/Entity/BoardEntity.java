@@ -29,15 +29,19 @@ public class BoardEntity extends TimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
+    @Column(length = 10, nullable = false)
+    private String password;
+
     @OneToMany(mappedBy = "boardEntity")
     private List<CommentEntity> commentEntityList = new ArrayList<>();
 
     @Builder
-    public BoardEntity(Long id, String title, String content, String writer){
+    public BoardEntity(Long id, String title, String content, String writer, String password){
         this.id = id;
         this.writer = writer;
         this.title = title;
         this.content = content;
+        this.password = password;
     }
 
 }

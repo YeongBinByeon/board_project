@@ -27,13 +27,13 @@
     <!-- 수정/삭제 -->
     <div class="row g-2">
         <div class="col-auto">
-            <a th:href="@{'/post/edit/'+${boardDto.id}}">
+            <a th:href="@{'/post/modify/'+${boardDto.id}}">
                 <button class="btn btn-primary">수정</button>
             </a>
         </div>
         <div class="col-auto">
-            <form id="delete-form" th:action="@{'/post/'+${boardDto.id}}" method="post">
-                <input type="hidden" name="_method" value="delete"/>
+            <form id="delete-form" th:action="@{'/post/delete/'+${boardDto.id}}" method="get">
+<!--                <input type="hidden" name="_method" value="delete"/>-->
                 <button id="delete-btn" class="btn btn-primary">삭제</button>
             </form>
         </div>
@@ -85,11 +85,25 @@
 
 
     <!-- 변수 셋팅 -->
+<!--    <script th:inline="javascript">-->
+<!--        /*<![CDATA[*/-->
+<!--        var boardDto = /*[[${boardDto}]]*/ "";-->
+<!--        /*]]>*/-->
+<!--    </script>-->
     <script th:inline="javascript">
         /*<![CDATA[*/
-        var boardDto = /*[[${boardDto}]]*/ "";
+
+        var message = [[${message}]];
+        if(message != null){
+            console.log(message);
+            alert(message);
+
+            //location.replace([[${searchUrl}]]);
+        }
         /*]]>*/
+
     </script>
+
 
     <!-- script -->
     <script th:inline="javascript" th:src="@{/js/board.js}"></script>

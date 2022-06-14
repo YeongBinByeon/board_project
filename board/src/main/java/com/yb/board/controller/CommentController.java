@@ -35,7 +35,7 @@ public class CommentController {
     public String writeHandlerFormRequest(@RequestParam("boardId") Long boardId, CommentDto commentDto, Model model) {
         log.info("boardId = {}, commentDto = {}", boardId, commentDto.toString());
         commentService.saveComment(boardId, commentDto);
-        return "redirect:/post/"+boardId;
+        return "redirect:/post/view/"+boardId;
 
     }
 }

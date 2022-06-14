@@ -20,6 +20,7 @@ import java.util.Optional;
 @Slf4j
 public class BoardService {
     private BoardRepository boardRepository;
+
     
     private static final int BLOCK_PAGE_NUM_COUNT = 100; // 블럭에 존재하는 페이지
     private static final int PAGE_POST_COUNT = 4; // 한 페이지에 존재하는 게시글 수
@@ -44,7 +45,17 @@ public class BoardService {
         return boardDtoList;
     }
 
-    public BoardDto getPost(long postId){
+    public BoardEntity getPostEntity(long postId){
+        Optional<BoardEntity> boardEntityWrapper = boardRepository.findById(postId);
+        if(boardEntityWrapper.isPresent()){
+            BoardEntity boardEntity = boardEntityWrapper.get();
+            return boardEntity;
+        }else{
+            return null;
+        }
+    }
+
+    public BoardDto getPostDto(long postId){
         Optional<BoardEntity> boardEntityWrapper = boardRepository.findById(postId);
         if(boardEntityWrapper.isPresent()){
             BoardEntity boardEntity = boardEntityWrapper.get();
@@ -55,9 +66,35 @@ public class BoardService {
         }
     }
 
+    public BoardDto modifyPost(long postId, String password){
+        Optional<BoardEntity> boardEntityWrapper = boardRepository.findById(postId);
+        if(boardEntityWrapper.isPresent()){
+            BoardEntity boardEntity = boardEntityWrapper.get();
+            if(!password.equalsIgnoreCase(boardEntity.getPassword())){
+                return null;
+            }
+            BoardDto boardDto = this.convertEntityToDto(boardEntity);
+            return boardDto;
+        }else{
+            return null;
+        }
+    }
+
     @Transactional
-    public void deletePost(long postId) {
-        boardRepository.deleteById(postId);
+    public boolean deletePost(long postId, String password) {
+        Optional<BoardEntity> boardEntityWrapper = boardRepository.findById(postId);
+        if(boardEntityWrapper.isPresent()){
+            BoardEntity boardEntity = boardEntityWrapper.get();
+            if(password.equalsIgnoreCase(boardEntity.getPassword())){
+                boardRepository.deleteById(postId);
+                return true;
+            }else {
+                return false;
+            }
+        }else{
+            log.info("존재하지 않는 게시글 삭제 시도");
+            return false;
+        }
     }
 
     public List<BoardDto> searchPosts(String keyword) {
@@ -83,6 +120,7 @@ public class BoardService {
                 .title(boardEntity.getTitle())
                 .content(boardEntity.getContent())
                 .writer(boardEntity.getWriter())
+                .password(boardEntity.getPassword())
                 .createdDate(boardEntity.getCreatedDate())
                 .build();
     }

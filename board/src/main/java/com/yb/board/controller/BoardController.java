@@ -1,5 +1,6 @@
 package com.yb.board.controller;
 
+import com.yb.board.Entity.BoardEntity;
 import com.yb.board.dto.BoardDto;
 import com.yb.board.dto.CommentDto;
 import com.yb.board.service.BoardService;
@@ -40,39 +41,65 @@ public class BoardController {
         return "redirect:/";
     }
 
-    @GetMapping(value = "/post/{postId}")
+    @GetMapping(value = "/post/view/{postId}")
     public String detail(@PathVariable("postId") long postId, Model model){
-        BoardDto boardDto = boardService.getPost(postId);
+        BoardDto boardDto = boardService.getPostDto(postId);
         List<CommentDto> commentDtoList = commentService.findComments(postId);
         model.addAttribute("boardDto", boardDto);
         model.addAttribute("commentDtoList", commentDtoList);
         return "board/detail.html";
     }
 
+    @GetMapping(value = "/post/modify/{postId}")
+    public String editPrepared(@PathVariable("postId") long postId, Model model){
+        model.addAttribute("postId", postId);
+        return "board/board_edit_password.html";
+    }
+
     @GetMapping(value = "/post/edit/{postId}")
-    public String edit(@PathVariable("postId") long postId, Model model){
-        BoardDto boardDto = boardService.getPost(postId);
+    public String edit(@PathVariable("postId") long postId,@RequestParam("password") String password, Model model){
+        BoardDto boardDto = boardService.modifyPost(postId, password);
+
+        if(boardDto == null){
+//            return "redirect:/post/view/"+postId;
+            model.addAttribute("message","비밀번호가 일치하지 않습니다.");
+            //model.addAttribute("searchUrl","");
+            return "board/board_edit_password.html";
+        }
+
         model.addAttribute("boardDto", boardDto);
         return "board/update.html";
     }
 
     @PutMapping("/post/edit/{postId}")
-    public String update(BoardDto boardDto){
+    public String update(@PathVariable("postId") long postId, BoardDto boardDto, Model model){
         boardService.savePost(boardDto);
 
-        return "redirect:/";
+        model.addAttribute("message", "수정이 완료되었습니다.");
+        return "redirect:/post/view/"+postId;
     }
 
-    @DeleteMapping("/post/{postId}")
-    public String delete(@PathVariable("postId") long postId){
-        boardService.deletePost(postId);
+    @GetMapping(value = "/post/delete/{postId}")
+    public String deletePrepared(@PathVariable("postId") long postId, Model model){
+        model.addAttribute("postId", postId);
+        return "board/board_delete_password.html";
+    }
 
-        return "redirect:/";
+    @DeleteMapping("/post/delete/{postId}")
+    public String delete(@PathVariable("postId") long postId, @RequestParam("password") String password, Model model){
+        boolean deleteCheckFlag = boardService.deletePost(postId, password);
+        if(deleteCheckFlag == false){
+            model.addAttribute("message","비밀번호가 일치하지 않습니다.");
+            //model.addAttribute("searchUrl","");
+            return "board/board_delete_password.html";
+        }
+        model.addAttribute("message","게시글 삭제가 성공하였습니다.");
+        return "board/list.html";
     }
 
     @GetMapping("/board/search")
-    public String search(@RequestParam(value = "keyword") String keyword, Model model){
-        List<BoardDto> boardDtoList = boardService.searchPosts(keyword);
+        public String search(@RequestParam(value = "keyword") String keyword, Model model){
+            List<BoardDto> boardDtoList = boardService.searchPosts(keyword);
 
         model.addAttribute("boardList", boardDtoList);
 
