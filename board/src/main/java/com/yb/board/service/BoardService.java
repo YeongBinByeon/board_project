@@ -2,9 +2,12 @@ package com.yb.board.service;
 
 import com.yb.board.Entity.BoardEntity;
 import com.yb.board.dto.BoardDto;
+import com.yb.board.encoding.EncodingPolicy;
 import com.yb.board.repository.BoardRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,13 +24,13 @@ import java.util.Optional;
 public class BoardService {
     private BoardRepository boardRepository;
 
-    
     private static final int BLOCK_PAGE_NUM_COUNT = 100; // 블럭에 존재하는 페이지
     private static final int PAGE_POST_COUNT = 4; // 한 페이지에 존재하는 게시글 수
     
 
     @Transactional
     public Long savePost(BoardDto boardDto){
+        //boardDto.setPassword(pwdEncoding.encoding(boardDto.getPassword()));
         return boardRepository.save(boardDto.toEntity()).getId();
     }
 
