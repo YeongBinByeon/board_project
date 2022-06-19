@@ -93,8 +93,8 @@ public class BoardController {
             //model.addAttribute("searchUrl","");
             return "board/board_delete_password.html";
         }
-        model.addAttribute("message","게시글 삭제가 성공하였습니다.");
-        return "board/list.html";
+        //model.addAttribute("message","게시글 삭제가 성공하였습니다.");
+        return "redirect:/";
     }
 
     @GetMapping("/board/search")

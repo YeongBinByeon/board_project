@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Slf4j
@@ -27,17 +28,16 @@ public class CommentService {
     }
 
     @Transactional
-    public int saveComment(Long boardId, CommentDto commentDto){
+    public Long saveComment(Long boardId, CommentDto commentDto) throws NoSuchElementException {
         CommentEntity commentEntity = commentDto.toEntity();
         if(!boardRepository.findById(boardId).isPresent()){
-            log.error("존재하지 않는 게시물 접근");
-            return -1;
+            throw new NoSuchElementException("존재하지 않는 게시글의 코멘트 저장 요청 발생");
         }
         commentEntity.setBoardEntity(boardRepository.findById(boardId).get());
 
-        commentRepository.save(commentEntity);
+        Long commentId = commentRepository.save(commentEntity).getId();
         log.info("commentEntity : {}, save finish", commentEntity);
-        return 0;
+        return commentId;
     }
 
     @Transactional
