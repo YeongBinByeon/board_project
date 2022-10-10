@@ -3,6 +3,8 @@ server:
   port: 8000
 
 eureka:
+  instance:
+    instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
   client:
     register-with-eureka: true
     fetch-registry: true
@@ -16,11 +18,11 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: user-service
-          uri: lb://USER-SERVICE
+        - id: board-service
+          uri: lb://BOARD-SERVICE
           predicates:
-            - Path=/user-service/login
-            - Method=POST
+            - Path=/board-service
+            - Method=GET
           filters:
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/board-service/(?<segment>.*), /$\{segment}
 
